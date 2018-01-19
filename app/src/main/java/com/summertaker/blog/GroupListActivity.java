@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.summertaker.blog.common.BaseActivity;
 import com.summertaker.blog.common.BaseApplication;
@@ -67,5 +68,15 @@ public class GroupListActivity extends BaseActivity {
     public void onToolbarClick() {
         //mGridView.setSelection(0);
         mGridView.smoothScrollToPosition(0);
+    }
+
+    @Override
+    protected void onSwipeRight() {
+        finish();
+    }
+
+    @Override
+    protected void onSwipeLeft() {
+
     }
 }

@@ -22,6 +22,7 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -80,10 +81,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 super.onDrawerClosed(view);
                 //Log.e(mTag, "mNavItemId: " + mNavItemId);
                 switch (mNavItemId) {
-                    case R.id.nav_member_settings:
-                        Intent groupIntent = new Intent(mContext, GroupListActivity.class);
-                        startActivityForResult(groupIntent, Config.REQUEST_CODE);
-                        break;
+                    //case R.id.nav_member_settings:
+                    //    Intent groupIntent = new Intent(mContext, GroupListActivity.class);
+                    //    startActivityForResult(groupIntent, Config.REQUEST_CODE);
+                    //    break;
                     case R.id.nav_cache_settings:
                         Intent cacheIntent = new Intent(mContext, CacheActivity.class);
                         startActivity(cacheIntent);
@@ -389,5 +390,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 mGridView.setAdapter(mAdapter);
             }
         }
+    }
+
+    @Override
+    protected void onSwipeRight() {
+
+    }
+
+    @Override
+    protected void onSwipeLeft() {
+
     }
 }

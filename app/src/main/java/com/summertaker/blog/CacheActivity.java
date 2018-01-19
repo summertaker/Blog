@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.summertaker.blog.common.BaseActivity;
 import com.summertaker.blog.common.Config;
@@ -77,5 +78,15 @@ public class CacheActivity extends BaseActivity {
         }
 
         showCache();
+    }
+
+    @Override
+    protected void onSwipeRight() {
+        finish();
+    }
+
+    @Override
+    protected void onSwipeLeft() {
+
     }
 }

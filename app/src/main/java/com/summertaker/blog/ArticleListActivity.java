@@ -5,9 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.summertaker.blog.common.BaseActivity;
 import com.summertaker.blog.common.BaseApplication;
@@ -146,5 +145,15 @@ public class ArticleListActivity extends BaseActivity implements ArticleListInte
     public void onImageClick(Article article, String imageUrl) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(imageUrl));
         startActivity(intent);
+    }
+
+    @Override
+    protected void onSwipeRight() {
+        finish();
+    }
+
+    @Override
+    protected void onSwipeLeft() {
+
     }
 }

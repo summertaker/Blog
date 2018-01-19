@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -212,5 +213,15 @@ public class MemberListActivity extends BaseActivity implements MemberListInterf
         // onPuase(), onStop(), onDestroy() 모두에 적용시키기 위해 미리 실행
         //---------------------------------------------------------------------
         setResult(RESULT_OK, getIntent().putExtra("isFavoriteChanged", true));
+    }
+
+    @Override
+    protected void onSwipeRight() {
+        finish();
+    }
+
+    @Override
+    protected void onSwipeLeft() {
+
     }
 }

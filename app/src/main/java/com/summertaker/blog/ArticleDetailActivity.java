@@ -63,6 +63,7 @@ public class ArticleDetailActivity extends BaseActivity {
         Spannable spannable = ImageUtil.getSpannableHtmlWithImageGetter(mContext, tvContent, html);
         tvContent.setText(spannable);
         tvContent.setMovementMethod(LinkMovementMethod.getInstance()); // URL 클릭 시 이동
+
     }
 
     @Override
@@ -73,5 +74,15 @@ public class ArticleDetailActivity extends BaseActivity {
 
     public void onToolbarClick() {
         mScrollView.scrollTo(0, 0);
+    }
+
+    @Override
+    protected void onSwipeRight() {
+        finish();
+    }
+
+    @Override
+    protected void onSwipeLeft() {
+
     }
 }
