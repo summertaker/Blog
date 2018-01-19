@@ -38,14 +38,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mContext = BaseActivity.this;
+        mResources = mContext.getResources();
+
         gestureDetector = new GestureDetector(this, new SwipeDetector());
     }
 
     protected void initToolbar(String title) {
-        mResources = mContext.getResources();
-
-        mContext = BaseActivity.this;
-
         mBaseToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mBaseToolbar);
 

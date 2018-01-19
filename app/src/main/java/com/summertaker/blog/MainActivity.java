@@ -1,13 +1,16 @@
 package com.summertaker.blog;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -44,10 +47,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final int REQUEST_PERMISSION_CODE = 100;
     private boolean mIsPermissionGranted = false;
+
+    protected String mTag = "== " + getClass().getSimpleName();
+    protected String mVolleyTag = mTag;
+
+    protected Context mContext;
 
     private boolean mIsFirst = true;
 
@@ -72,8 +80,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mContext = MainActivity.this;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-        initToolbar(null);
+        setSupportActionBar(toolbar);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onToolbarClick();
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
@@ -367,7 +380,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onRefresh() {
-        //Log.e(mTag, "onRefresh()...");
         refresh();
     }
 
@@ -390,15 +402,5 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 mGridView.setAdapter(mAdapter);
             }
         }
-    }
-
-    @Override
-    protected void onSwipeRight() {
-
-    }
-
-    @Override
-    protected void onSwipeLeft() {
-
     }
 }
