@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -45,7 +46,7 @@ public class ArticleDetailActivity extends BaseActivity {
         TextView tvToday = findViewById(R.id.tvToday);
         Date today = new Date();
         Date blogDate = Util.getDate(date);
-        if (today.compareTo(blogDate) == 0) {
+        if (Util.isSameDate(today, blogDate)) {
             tvToday.setVisibility(View.VISIBLE);
         }
 
@@ -54,7 +55,7 @@ public class ArticleDetailActivity extends BaseActivity {
         c.setTime(today);
         c.add(Calendar.DATE, -1);
         Date yesterday = c.getTime();
-        if (yesterday.compareTo(blogDate) == 0) {
+        if (Util.isSameDate(today, yesterday)) {
             tvYesterday.setVisibility(View.VISIBLE);
         }
 
@@ -63,7 +64,6 @@ public class ArticleDetailActivity extends BaseActivity {
         Spannable spannable = ImageUtil.getSpannableHtmlWithImageGetter(mContext, tvContent, html);
         tvContent.setText(spannable);
         tvContent.setMovementMethod(LinkMovementMethod.getInstance()); // URL 클릭 시 이동
-
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.summertaker.blog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -75,23 +76,27 @@ public class ArticleListActivity extends BaseActivity implements ArticleListInte
     }
 
     private void loadData() {
-            String fileName = Util.getUrlToFileName(mBlogUrl) + ".html";
+        String fileName = Util.getUrlToFileName(mBlogUrl) + ".html";
 
-            //File file = new File(Config.DATA_PATH, fileName);
-            parseData(mBlogUrl, Util.readFile(fileName));
+        //File file = new File(Config.DATA_PATH, fileName);
+        parseData(mBlogUrl, Util.readFile(fileName));
     }
 
     private void parseData(String url, String response) {
         if (!response.isEmpty()) {
-            //mArticles = new ArrayList<>();
+            ArrayList<Article> articles = new ArrayList<>();
             if (url.contains("nogizaka46")) {
                 Nogizaka46Parser nogizaka46Parser = new Nogizaka46Parser();
-                nogizaka46Parser.parseBlogDetail(response, mArticles);
+                nogizaka46Parser.parseBlogDetail(response, articles);
             } else if (url.contains("keyakizaka46")) {
                 Keyakizaka46Parser keyakizaka46Parser = new Keyakizaka46Parser();
-                keyakizaka46Parser.parseBlogDetail(response, mArticles);
+                keyakizaka46Parser.parseBlogDetail(response, articles);
             }
+
+            mArticles.clear();
+            mArticles.addAll(articles);
         }
+
         renderData();
     }
 
@@ -102,19 +107,26 @@ public class ArticleListActivity extends BaseActivity implements ArticleListInte
         // 최종 블로그 일자 저장하기
         //--------------------------
         if (mArticles.size() > 0) {
+            boolean isDataChanged = false;
+
             Article article = mArticles.get(0);
             ArrayList<Member> favorites = BaseApplication.getInstance().loadMember(Config.PREFERENCE_KEY_FAVORITES);
 
             for (Member member : favorites) {
                 if (member.getBlogUrl().equals(mBlogUrl)) {
-                    member.setLastDate(article.getDate());
-                    member.setUpdated(false);
+                    if (!member.getLastDate().equals(article.getDate())) { // 최종 날짜가 다르면
+                        member.setLastDate(article.getDate());
+                        member.setUpdated(false);
+                        isDataChanged = true;
+                        break;
+                    }
                 }
             }
 
-            BaseApplication.getInstance().saveMember(Config.PREFERENCE_KEY_FAVORITES, favorites);
-
-            setResult(RESULT_OK, getIntent().putExtra("isDataChanged", true));
+            if (isDataChanged) {
+                BaseApplication.getInstance().saveMember(Config.PREFERENCE_KEY_FAVORITES, favorites);
+                setResult(RESULT_OK, getIntent().putExtra("isDataChanged", true));
+            }
         }
     }
 

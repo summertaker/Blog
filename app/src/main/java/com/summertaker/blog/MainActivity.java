@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SwipeRefreshLayout mSwipeRefresh;
     private int mLoadCount = 0;
     private ArrayList<Member> mFavorites;
-    private ArrayList<Article> mArticles;
     private MainAdapter mAdapter;
     private GridView mGridView;
 
@@ -123,7 +122,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mSwipeRefresh = findViewById(R.id.swipeRefresh);
         mSwipeRefresh.setOnRefreshListener(this);
 
+        mFavorites = new ArrayList<>();
+        mAdapter = new MainAdapter(mContext, mFavorites);
+
         mGridView = findViewById(R.id.gridView);
+        mGridView.setAdapter(mAdapter);
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -201,8 +204,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent groupList = new Intent(mContext, GroupListActivity.class);
                 startActivityForResult(groupList, Config.REQUEST_CODE);
                 return true;
-            case R.id.action_refresh:
-                refresh();
+            //case R.id.action_refresh:
+            //    refresh();
+            //    return true;
+            case R.id.action_sort:
+                Intent sort = new Intent(mContext, SortActivity.class);
+                startActivityForResult(sort, Config.REQUEST_CODE);
                 return true;
         }
 
@@ -235,10 +242,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (mIsFirst) {
                 mIsFirst = false;
 
-                mFavorites = BaseApplication.getInstance().loadMember(Config.PREFERENCE_KEY_FAVORITES);
-                if (mFavorites.size() == 0) {
+                ArrayList<Member> members = BaseApplication.getInstance().loadMember(Config.PREFERENCE_KEY_FAVORITES);
+
+                if (members.size() == 0) {
                     renderData();
                 } else {
+                    // https://stackoverflow.com/questions/15422120/notifydatasetchange-not-working-from-custom-adapter
+                    mFavorites.clear();
+                    mFavorites.addAll(members);
+
                     loadData();
                 }
             }
@@ -267,13 +279,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         StringRequest strReq = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                //Log.d(mTag, response.toString());
+                //Log.e(mTag, response.toString());
                 writeData(url, response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Util.alert(mContext, getString(R.string.error), error.getMessage(), null);
+                Log.e(mTag, "VolleyError: " + error.getMessage());
+                //Util.alert(mContext, getString(R.string.error), error.getMessage(), null);
             }
         }) {
             @Override
@@ -295,13 +308,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void parseData(String url, String response) {
         if (!response.isEmpty()) {
-            mArticles = new ArrayList<>();
+            ArrayList<Article> articles = new ArrayList<>();
             if (url.contains("nogizaka46")) {
                 Nogizaka46Parser nogizaka46Parser = new Nogizaka46Parser();
-                nogizaka46Parser.parseBlogDetail(response, mArticles);
+                nogizaka46Parser.parseBlogDetail(response, articles);
             } else if (url.contains("keyakizaka46")) {
                 Keyakizaka46Parser keyakizaka46Parser = new Keyakizaka46Parser();
-                keyakizaka46Parser.parseBlogDetail(response, mArticles);
+                keyakizaka46Parser.parseBlogDetail(response, articles);
             }
 
             //Log.e(mTag, "articles.size(): " + articles.size());
@@ -315,12 +328,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             if (currentMember != null) {
-                if (mArticles.size() > 0) {
+                if (articles.size() > 0) {
                     if (currentMember.getLastDate() == null || currentMember.getLastDate().isEmpty()) {
                         // 마지막 체크 날짜가 없는 경우
                         currentMember.setUpdated(true);
                     } else {
-                        Date articleDate = Util.getDate(mArticles.get(0).getDate());
+                        Date articleDate = Util.getDate(articles.get(0).getDate());
                         Date lastDate = Util.getDate(currentMember.getLastDate());
                         //Log.e(mTag, articleDate.toString() + " " + lastDate.toString());
 
@@ -356,11 +369,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void renderData() {
+        //Log.e(mTag, "renderData().mFavorites.size() = " + mFavorites.size());
+
         mLoLoading.setVisibility(View.GONE);
         mSwipeRefresh.setVisibility(View.VISIBLE);
 
-        mAdapter = new MainAdapter(mContext, mFavorites);
-        mGridView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
 
         mLoadCount = 0;
         mSwipeRefresh.setRefreshing(false);
@@ -392,14 +406,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             boolean isDataChanged = data.getBooleanExtra("isDataChanged", false);
             //Log.e(mTag, "isFavoriteChanged: " + isFavoriteChanged + ", isDataChanged: " + isDataChanged);
 
+            if (isFavoriteChanged || isDataChanged) {
+                // https://stackoverflow.com/questions/15422120/notifydatasetchange-not-working-from-custom-adapter
+                ArrayList<Member> members = BaseApplication.getInstance().loadMember(Config.PREFERENCE_KEY_FAVORITES);
+                mFavorites.clear();
+                mFavorites.addAll(members);
+            }
+
             if (isFavoriteChanged) {
-                mFavorites = BaseApplication.getInstance().loadMember(Config.PREFERENCE_KEY_FAVORITES);
                 loadData();
             } else if (isDataChanged) {
-                mFavorites = BaseApplication.getInstance().loadMember(Config.PREFERENCE_KEY_FAVORITES);
-
-                mAdapter = new MainAdapter(mContext, mFavorites);
-                mGridView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
             }
         }
     }

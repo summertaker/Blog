@@ -44,6 +44,10 @@
         <activity
             android:name=".CacheActivity"
             android:label="@string/title_activity_cache"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SortActivity"
+            android:label="@string/title_activity_sort"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

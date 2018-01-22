@@ -2,6 +2,7 @@ package com.summertaker.blog;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ public class MainAdapter extends BaseDataAdapter {
 
     @Override
     public int getCount() {
-        return (mMembers == null) ? 0 : mMembers.size();
+        return mMembers.size();
     }
 
     @Override

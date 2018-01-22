@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.summertaker.blog.common.BaseActivity;
 import com.summertaker.blog.common.Config;
@@ -22,7 +21,7 @@ public class CacheActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cache);
+        setContentView(R.layout.cache_activity);
 
         mContext = CacheActivity.this;
 

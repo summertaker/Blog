@@ -5,6 +5,7 @@
     <string name="action_open_in_new">새 창에서 열기</string>
     <string name="action_save">저장</string>
     <string name="action_settings">설정</string>
+    <string name="action_sort">정렬</string>
 
     <string name="action_refresh">새로 고침</string>
     <string name="access_denied">접근이 거부되었습니다.</string>
@@ -30,13 +31,15 @@
     <string name="one_hundred_percent">100%</string>
 
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="sort">정렬</string>
     <string name="success">성공</string>
 
-    <string name="title_activity_group_list">그룹 목록</string>
-    <string name="title_activity_member_list">멤버 목록</string>
     <string name="title_activity_article_list">글 목록</string>
     <string name="title_activity_article_detail">글 내용</string>
     <string name="title_activity_cache">캐쉬 설정</string>
+    <string name="title_activity_group_list">그룹 목록</string>
+    <string name="title_activity_member_list">멤버 목록</string>
+    <string name="title_activity_sort">정렬</string>
     <string name="today">오늘</string>
 
     <string name="yesterday">어제</string>

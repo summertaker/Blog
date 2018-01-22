@@ -2,6 +2,7 @@ package com.summertaker.blog;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -161,11 +162,11 @@ public class ArticleListAdapter extends BaseDataAdapter {
         holder.tvName.setText(article.getName());
 
         // 날짜
-        String pubDate = article.getDate();
+        String blogDate = article.getDate();
         holder.tvToday.setVisibility(View.GONE);
         holder.tvYesterday.setVisibility(View.GONE);
 
-        if (pubDate == null || pubDate.isEmpty()) {
+        if (blogDate == null || blogDate.isEmpty()) {
             holder.tvDate.setVisibility(View.GONE);
         } else {
             //Log.e(mTag, "pubDate: " + pubDate);
@@ -174,28 +175,28 @@ public class ArticleListAdapter extends BaseDataAdapter {
             Date date = null;
             try {
                 DateFormat sdf = null;
-                if (pubDate.contains("+")) {
+                if (blogDate.contains("+")) {
                     sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
-                    date = sdf.parse(pubDate);
-                    pubDate = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.SHORT).format(date);
-                } else if (pubDate.contains("/")) {
+                    date = sdf.parse(blogDate);
+                    blogDate = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.SHORT).format(date);
+                } else if (blogDate.contains("/")) {
                     sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.ENGLISH);
-                    date = sdf.parse(pubDate);
-                    pubDate = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.SHORT).format(date);
-                } else if (pubDate.contains("-")) {
+                    date = sdf.parse(blogDate);
+                    blogDate = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.SHORT).format(date);
+                } else if (blogDate.contains("-")) {
                     sdf = new SimpleDateFormat("yyyy-MM-dd E", Locale.ENGLISH);
-                    date = sdf.parse(pubDate);
-                    pubDate = DateFormat.getDateInstance(DateFormat.FULL).format(date);
-                } else if (pubDate.contains(".") && pubDate.length() <= 10) {
+                    date = sdf.parse(blogDate);
+                    blogDate = DateFormat.getDateInstance(DateFormat.FULL).format(date);
+                } else if (blogDate.contains(".") && blogDate.length() <= 10) {
                     sdf = new SimpleDateFormat("yyyy.MM.dd", Locale.ENGLISH);
-                    date = sdf.parse(pubDate);
-                    pubDate = DateFormat.getDateInstance(DateFormat.FULL).format(date);
+                    date = sdf.parse(blogDate);
+                    blogDate = DateFormat.getDateInstance(DateFormat.FULL).format(date);
                 }
-                pubDate = pubDate.replace("요일", "");
+                blogDate = blogDate.replace("요일", "");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            holder.tvDate.setText(pubDate);
+            holder.tvDate.setText(blogDate);
 
             if (date != null) {
                 Date today = new Date();
